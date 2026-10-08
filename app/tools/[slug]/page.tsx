@@ -18,6 +18,9 @@ import DateDifferenceSeoContent from "../../../components/DateDifferenceSeoConte
 import DateDifferenceFaqSchema from "../../../components/DateDifferenceFaqSchema";
 import BMISeoContent from "../../../components/BMISeoContent";
 import BMIFaqSchema from "../../../components/BMIFaqSchema";
+import IncomeTaxSeoContent from "../../../components/IncomeTaxSeoContent";
+import IncomeTaxFaqSchema from "../../../components/IncomeTaxFaqSchema";
+
 
 type Props = {
   params: Promise<{
@@ -114,6 +117,12 @@ const seoData: Record<
     title: "PDF to Word Converter - Convert PDF to DOCX",
     description:
       "Convert supported PDF documents into editable Word DOCX files directly in your browser.",
+  },
+  "income-tax-calculator": {
+    title:
+      "Income Tax Calculator FY 2026-27 - Old vs New Regime",
+    description:
+      "Calculate income tax for FY 2026-27 and compare the old and new tax regimes. Estimate taxable income, tax, surcharge, cess and tax savings.",
   },
 };
 
@@ -252,6 +261,28 @@ export default async function ToolPage({ params }: Props) {
           <ToolClient slug={slug} />
 
           <PercentageSeoContent />
+
+          <RelatedTools />
+        </>
+      ) : slug === "income-tax-calculator" ? (
+        <>
+          <header className="tool-seo-header">
+            <h1>
+              Income Tax Calculator FY 2026-27
+            </h1>
+
+            <p>
+              Calculate your estimated income tax
+              for FY 2026-27 and compare the old
+              and new tax regimes.
+            </p>
+          </header>
+
+          <IncomeTaxFaqSchema />
+
+          <ToolClient slug={slug} />
+
+          <IncomeTaxSeoContent />
 
           <RelatedTools />
         </>

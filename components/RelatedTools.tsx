@@ -27,6 +27,11 @@ const relatedTools: RelatedTool[] = [
     title: "Discount Calculator",
     description: "Calculate discounts, savings and sale prices.",
   },
+  {
+    slug: "income-tax-calculator",
+    title: "Income Tax Calculator",
+    description: "Compare old and new tax regimes and estimate income tax.",
+  },
 ];
 
 export default function RelatedTools() {

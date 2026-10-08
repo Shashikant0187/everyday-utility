@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import IncomeTax from "../../../components/IncomeTax";
 
 
 function money(n: number) { return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n); }
@@ -22,7 +23,10 @@ export default function ToolClient({ slug }: { slug: string }) {
   else if (slug === "compress-pdf") content = <CompressPdf />;
   else if (slug === "merge-pdf") content = <MergePdf />;
   else if (slug === "date-difference") content = <DateDifference />;
+  else if (slug === "income-tax-calculator")
+  content = <IncomeTax />;
   else content = <ComingSoon />;
+  
 
   function goBack() {
     if (window.history.length > 1) {
