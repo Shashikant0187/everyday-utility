@@ -1,6 +1,23 @@
 import type { Metadata } from "next";
 import ToolClient from "./ToolClient";
 import { tools } from "../../../lib/tools";
+import EMISeoContent from "../../../components/EMISeoContent";
+import EMIFaqSchema from "../../../components/EMIFaqSchema";
+import RelatedTools from "../../../components/RelatedTools";
+import SIPSeoContent from "../../../components/SIPSeoContent";
+import SIPFaqSchema from "../../../components/SIPFaqSchema";
+import GSTSeoContent from "../../../components/GSTSeoContent";
+import GSTFaqSchema from "../../../components/GSTFaqSchema";
+import PercentageSeoContent from "../../../components/PercentageSeoContent";
+import PercentageFaqSchema from "../../../components/PercentageFaqSchema";
+import DiscountSeoContent from "../../../components/DiscountSeoContent";
+import DiscountFaqSchema from "../../../components/DiscountFaqSchema";
+import AgeSeoContent from "../../../components/AgeSeoContent";
+import AgeFaqSchema from "../../../components/AgeFaqSchema";
+import DateDifferenceSeoContent from "../../../components/DateDifferenceSeoContent";
+import DateDifferenceFaqSchema from "../../../components/DateDifferenceFaqSchema";
+import BMISeoContent from "../../../components/BMISeoContent";
+import BMIFaqSchema from "../../../components/BMIFaqSchema";
 
 type Props = {
   params: Promise<{
@@ -16,9 +33,9 @@ const seoData: Record<
   }
 > = {
   "emi-calculator": {
-    title: "EMI Calculator - Calculate Monthly EMI Online",
+    title: "EMI Calculator – Loan EMI, Interest & Payment",
     description:
-      "Calculate your monthly loan EMI, total interest and total repayment instantly with our free EMI calculator.",
+      "Use our free EMI calculator to calculate monthly loan EMI, total interest and total repayment for home, car and personal loans.",
   },
 
   "sip-calculator": {
@@ -155,5 +172,175 @@ export function generateStaticParams() {
 export default async function ToolPage({ params }: Props) {
   const { slug } = await params;
 
-  return <ToolClient slug={slug} />;
+  return (
+    <main>
+      {slug === "emi-calculator" ? (
+        <>
+          <header className="tool-seo-header">
+            <h1>BMI Calculator - Calculate Body Mass Index</h1>
+
+            <p>
+              Use our free BMI calculator to calculate Body Mass Index from your
+              weight and height and see the corresponding BMI category.
+            </p>
+          </header>
+
+          <EMIFaqSchema />
+
+          <ToolClient slug={slug} />
+
+          <EMISeoContent />
+
+          <RelatedTools />
+        </>
+      ) : slug === "sip-calculator" ? (
+        <>
+          <header className="tool-seo-header">
+            <h1>SIP Calculator - Calculate SIP Returns Online</h1>
+
+            <p>
+              Use our free SIP calculator to estimate your total investment,
+              expected returns and potential future value based on your monthly
+              investment, expected return and investment duration.
+            </p>
+          </header>
+
+          <SIPFaqSchema />
+
+          <ToolClient slug={slug} />
+
+          <SIPSeoContent />
+
+          <RelatedTools />
+        </>
+
+      ) : slug === "gst-calculator" ? (
+        <>
+          <header className="tool-seo-header">
+            <h1>GST Calculator - Calculate GST Online</h1>
+
+            <p>
+              Use our free GST calculator to calculate GST amount and total price
+              including GST. Enter the amount before GST and the applicable GST rate
+              to get the result instantly.
+            </p>
+          </header>
+
+          <GSTFaqSchema />
+
+          <ToolClient slug={slug} />
+
+          <GSTSeoContent />
+
+          <RelatedTools />
+        </>
+
+      ) : slug === "percentage-calculator" ? (
+        <>
+          <header className="tool-seo-header">
+            <h1>Percentage Calculator - Calculate Percentages Online</h1>
+
+            <p>
+              Use our free percentage calculator to quickly calculate a percentage
+              of any number. Enter the percentage and number to get the result
+              instantly.
+            </p>
+          </header>
+
+          <PercentageFaqSchema />
+
+          <ToolClient slug={slug} />
+
+          <PercentageSeoContent />
+
+          <RelatedTools />
+        </>
+
+      ) : slug === "discount-calculator" ? (
+        <>
+          <header className="tool-seo-header">
+            <h1>Discount Calculator - Calculate Sale Price & Savings</h1>
+
+            <p>
+              Use our free discount calculator to calculate the discount amount,
+              final sale price and money saved. Enter the original price and
+              discount percentage to get the result instantly.
+            </p>
+          </header>
+
+          <DiscountFaqSchema />
+
+          <ToolClient slug={slug} />
+
+          <DiscountSeoContent />
+
+          <RelatedTools />
+        </>
+
+      ) : slug === "age-calculator" ? (
+        <>
+          <header className="tool-seo-header">
+            <h1>Age Calculator - Calculate Your Exact Age</h1>
+
+            <p>
+              Use our free age calculator to calculate your current age from your
+              date of birth. Enter your birth date to quickly calculate your age in
+              years and months.
+            </p>
+          </header>
+
+          <AgeFaqSchema />
+
+          <ToolClient slug={slug} />
+
+          <AgeSeoContent />
+
+          <RelatedTools />
+        </>
+
+      ) : slug === "date-difference" ? (
+        <>
+          <header className="tool-seo-header">
+            <h1>Date Difference Calculator - Calculate Days Between Dates</h1>
+
+            <p>
+              Use our free date difference calculator to calculate the number of
+              days between two dates. Enter a start date and end date to get the
+              difference instantly.
+            </p>
+          </header>
+
+          <DateDifferenceFaqSchema />
+
+          <ToolClient slug={slug} />
+
+          <DateDifferenceSeoContent />
+
+          <RelatedTools />
+        </>
+
+      ) : slug === "bmi-calculator" ? (
+        <>
+          <header className="tool-seo-header">
+            <h1>BMI Calculator - Calculate Body Mass Index</h1>
+
+            <p>
+              Use our free BMI calculator to calculate Body Mass Index from your
+              weight and height and see the corresponding BMI category.
+            </p>
+          </header>
+
+          <BMIFaqSchema />
+
+          <ToolClient slug={slug} />
+
+          <BMISeoContent />
+
+          <RelatedTools />
+        </>
+      ) : (
+        <ToolClient slug={slug} />
+      )}
+    </main>
+  );
 }
