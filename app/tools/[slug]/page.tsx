@@ -53,7 +53,7 @@ const seoData: Record<
   "percentage-calculator": {
     title: "Percentage Calculator - Calculate Percentages Online",
     description:
-      "Calculate percentages, percentage increase, decrease and difference quickly with our free percentage calculator.",
+      "Use our free percentage calculator to find a percentage of a number, calculate what percentage one number is of another, and calculate percentage increase or decrease.",
   },
 
   "discount-calculator": {

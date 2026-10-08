@@ -4,79 +4,134 @@ export default function PercentageSeoContent() {
       <h2>What is a Percentage Calculator?</h2>
 
       <p>
-        A percentage calculator helps you quickly calculate a percentage of a
-        given number. It is useful for everyday calculations such as finding
-        percentages, discounts, marks, changes in values, and other numerical
-        calculations.
+        A percentage calculator helps you calculate percentages quickly for
+        everyday calculations such as finding a percentage of a number,
+        comparing values, and calculating percentage increases or decreases.
       </p>
 
-      <h2>How does a percentage calculator work?</h2>
+      <h2>What can you calculate with this percentage calculator?</h2>
+
+      <ul>
+        <li>Find a percentage of a number</li>
+        <li>Find what percentage one number is of another</li>
+        <li>Calculate percentage increase</li>
+        <li>Calculate percentage decrease</li>
+      </ul>
+
+      <h2>How to calculate a percentage of a number</h2>
 
       <p>
-        To calculate a percentage of a number, multiply the percentage by the
-        number and divide the result by 100.
+        To find X percent of a number, multiply the number by X and divide the
+        result by 100.
       </p>
 
       <div className="formula-box">
-        <strong>Percentage Formula</strong>
+        <strong>Formula</strong>
+        <p>Percentage of a number = (Percentage ÷ 100) × Number</p>
+      </div>
+
+      <h3>Example</h3>
+
+      <p>
+        To calculate 20% of 500:
+      </p>
+
+      <p>
+        20 ÷ 100 × 500 = 100
+      </p>
+
+      <h2>How to find what percentage one number is of another</h2>
+
+      <p>
+        Divide the first number by the second number and multiply the result by
+        100.
+      </p>
+
+      <div className="formula-box">
+        <strong>Formula</strong>
+        <p>Percentage = (Part ÷ Total) × 100</p>
+      </div>
+
+      <h3>Example</h3>
+
+      <p>
+        If 100 is compared with 500:
+      </p>
+
+      <p>
+        (100 ÷ 500) × 100 = 20%
+      </p>
+
+      <h2>How to calculate percentage increase</h2>
+
+      <p>
+        Percentage increase shows how much a value has increased from its
+        original value to a new value.
+      </p>
+
+      <div className="formula-box">
+        <strong>Formula</strong>
         <p>
-          Result = Percentage × Number ÷ 100
+          Percentage increase = ((New value − Original value) ÷ Original
+          value) × 100
         </p>
       </div>
 
-      <h2>Percentage Calculator Example</h2>
+      <h3>Example</h3>
 
       <p>
-        Suppose you want to calculate 20% of 500.
+        If a value increases from 100 to 150, the percentage increase is 50%.
       </p>
 
-      <ul>
-        <li>Percentage: 20%</li>
-        <li>Number: 500</li>
-        <li>Result: 100</li>
-      </ul>
+      <h2>How to calculate percentage decrease</h2>
 
       <p>
-        Therefore, 20% of 500 is 100.
+        Percentage decrease shows how much a value has decreased compared with
+        its original value.
       </p>
 
-      <h2>Where are percentages used?</h2>
+      <div className="formula-box">
+        <strong>Formula</strong>
+        <p>
+          Percentage decrease = ((Original value − New value) ÷ Original
+          value) × 100
+        </p>
+      </div>
 
-      <ul>
-        <li>Calculating discounts</li>
-        <li>Calculating exam marks and scores</li>
-        <li>Comparing values</li>
-        <li>Calculating increases or decreases</li>
-        <li>Understanding financial calculations</li>
-        <li>Everyday mathematical calculations</li>
-      </ul>
+      <h3>Example</h3>
+
+      <p>
+        If a value decreases from 150 to 100, the percentage decrease is
+        approximately 33.33%.
+      </p>
 
       <h2>Percentage Calculator FAQs</h2>
 
-      <h3>How do I calculate a percentage of a number?</h3>
+      <h3>How do I calculate X% of a number?</h3>
 
       <p>
-        Multiply the percentage by the number and divide the result by 100.
+        Divide the percentage by 100 and multiply it by the number. For
+        example, 20% of 500 is 100.
       </p>
 
-      <h3>What is 20% of 500?</h3>
+      <h3>How do I find what percentage one number is of another?</h3>
 
       <p>
-        20% of 500 is 100.
+        Divide the first number by the second number and multiply by 100.
       </p>
 
-      <h3>What is the basic percentage formula?</h3>
+      <h3>How do I calculate percentage increase?</h3>
 
       <p>
-        The basic formula for calculating a percentage of a number is:
-        Percentage × Number ÷ 100.
+        Subtract the original value from the new value, divide by the original
+        value, and multiply by 100.
       </p>
 
-      <h3>Can I use this calculator for everyday calculations?</h3>
+      <h3>How do I calculate percentage decrease?</h3>
 
       <p>
-        Yes. You can use it whenever you need to calculate a percentage of a
-        given number quickly.
+        Subtract the new value from the original value, divide by the original
+        value, and multiply by 100.
       </p>
     </section>
   );

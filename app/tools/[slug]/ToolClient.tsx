@@ -65,8 +65,97 @@ function GST() {
   return <Box><div className="form-grid"><Field label="Amount before GST (₹)" value={amount} onChange={setAmount} /><Field label="GST rate (%)" value={rate} onChange={setRate} /></div><div className="result"><span>GST amount</span><strong>{money(tax)}</strong><div className="cards"><Mini l="Base amount" v={money(amount)} /><Mini l="Total" v={money(total)} /></div></div></Box>;
 }
 function Percentage() {
-  const [a, setA] = useState(20), [b, setB] = useState(500); const x = a / 100 * b;
-  return <Box><div className="form-grid"><Field label="Percentage (%)" value={a} onChange={setA} /><Field label="Of number" value={b} onChange={setB} /></div><div className="result"><span>Result</span><strong>{x.toLocaleString("en-IN")}</strong></div></Box>;
+  const [mode, setMode] = useState("of");
+  const [a, setA] = useState<number | "">(20);
+  const [b, setB] = useState<number | "">(500);
+
+  const first = a === "" ? 0 : a;
+  const second = b === "" ? 0 : b;
+
+  let result = 0;
+  let label = "Result";
+
+  if (mode === "of") {
+    result = (first / 100) * second;
+    label = `${first}% of ${second}`;
+  }
+
+  if (mode === "what-percent") {
+    result = second !== 0 ? (first / second) * 100 : 0;
+    label = `${first} is what % of ${second}`;
+  }
+
+  if (mode === "increase") {
+    result = first !== 0
+      ? ((second - first) / Math.abs(first)) * 100
+      : 0;
+
+    label = "Percentage increase";
+  }
+
+  if (mode === "decrease") {
+    result = first !== 0
+      ? ((first - second) / Math.abs(first)) * 100
+      : 0;
+
+    label = "Percentage decrease";
+  }
+
+  return (
+    <Box>
+      <div className="field">
+        <label>Calculate</label>
+
+        <select
+          value={mode}
+          onChange={(e) => setMode(e.target.value)}
+        >
+          <option value="of">What is X% of Y?</option>
+          <option value="what-percent">X is what % of Y?</option>
+          <option value="increase">Percentage increase</option>
+          <option value="decrease">Percentage decrease</option>
+        </select>
+      </div>
+
+      <div className="form-grid">
+        <div className="field">
+          <label>{mode === "of" ? "Percentage (%)" : "First value"}</label>
+
+          <input
+            type="number"
+            value={a}
+            onChange={(e) =>
+              setA(e.target.value === "" ? "" : Number(e.target.value))
+            }
+          />
+        </div>
+
+        <div className="field">
+          <label>{mode === "of" ? "Of number" : "Second value"}</label>
+
+          <input
+            type="number"
+            value={b}
+            onChange={(e) =>
+              setB(e.target.value === "" ? "" : Number(e.target.value))
+            }
+          />
+        </div>
+      </div>
+
+      <div className="result">
+        <span>{label}</span>
+
+        <strong>
+          {mode === "of"
+            ? result.toLocaleString("en-IN", {
+              maximumFractionDigits: 2,
+            })
+            : `${result.toFixed(2)}%`}
+        </strong>
+      </div>
+    </Box>
+  );
 }
 function Discount() {
   const [price, setPrice] = useState(1000), [d, setD] = useState(20); const save = price * d / 100;

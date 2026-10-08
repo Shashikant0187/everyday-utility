@@ -7,34 +7,34 @@ export default function PercentageFaqSchema() {
     mainEntity: [
       {
         "@type": "Question",
-        name: "How do I calculate a percentage of a number?",
+        name: "How do I calculate X% of a number?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Multiply the percentage by the number and divide the result by 100.",
+          text: "Divide the percentage by 100 and multiply it by the number. For example, 20% of 500 is 100.",
         },
       },
       {
         "@type": "Question",
-        name: "What is 20% of 500?",
+        name: "How do I find what percentage one number is of another?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "20% of 500 is 100.",
+          text: "Divide the first number by the second number and multiply by 100.",
         },
       },
       {
         "@type": "Question",
-        name: "What is the basic percentage formula?",
+        name: "How do I calculate percentage increase?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "The basic formula for calculating a percentage of a number is Percentage × Number ÷ 100.",
+          text: "Subtract the original value from the new value, divide by the original value, and multiply by 100.",
         },
       },
       {
         "@type": "Question",
-        name: "Can I use this calculator for everyday calculations?",
+        name: "How do I calculate percentage decrease?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes. You can use it whenever you need to calculate a percentage of a given number quickly.",
+          text: "Subtract the new value from the original value, divide by the original value, and multiply by 100.",
         },
       },
     ],
