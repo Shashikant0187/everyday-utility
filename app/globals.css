@@ -636,16 +636,28 @@ select {
     min-height: auto;
   }
 
-  .tool-box {
-    padding: 20px;
-    border-radius: 16px;
-  }
+.tool-box {
+  width: min(850px, calc(100% - 40px));
+  margin: 0 auto 40px;
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+}
 
   .tool-page {
     padding: 48px 18px 80px;
   }
 }
 
+@media (max-width: 760px) {
+  .tool-box {
+    width: calc(100% - 28px);
+    padding: 20px;
+    border-radius: 14px;
+  }
+}
 @media (max-width: 480px) {
   .hero h1 {
     font-size: 39px;
