@@ -54,6 +54,14 @@ export const tools = [
   },
 
   {
+    slug: "salary-calculator",
+    title: "Salary / In-Hand Salary Calculator",
+    category: "money",
+    description:
+      "Estimate monthly take-home salary from CTC, PF, payroll deductions and income tax.",
+    icon: "₹",
+  },
+  {
     slug: "age-calculator",
     title: "Age Calculator",
     category: "daily",

@@ -20,6 +20,8 @@ import BMISeoContent from "../../../components/BMISeoContent";
 import BMIFaqSchema from "../../../components/BMIFaqSchema";
 import IncomeTaxSeoContent from "../../../components/IncomeTaxSeoContent";
 import IncomeTaxFaqSchema from "../../../components/IncomeTaxFaqSchema";
+import SalarySeoContent from "../../../components/SalarySeoContent";
+import SalaryFaqSchema from "../../../components/SalaryFaqSchema";
 
 
 type Props = {
@@ -124,6 +126,11 @@ const seoData: Record<
     description:
       "Calculate income tax for FY 2026-27 and compare the old and new tax regimes. Estimate taxable income, tax, surcharge, cess and tax savings.",
   },
+  "salary-calculator": {
+    title: "Salary Calculator - Calculate In-Hand Salary from CTC",
+    description:
+      "Estimate monthly in-hand salary from CTC, employer PF, gratuity, variable pay, employee PF, professional tax and income tax.",
+  },
 };
 
 export async function generateMetadata({
@@ -217,7 +224,7 @@ export default async function ToolPage({ params }: Props) {
 
           <EMISeoContent />
 
-          <RelatedTools />
+          <RelatedTools currentSlug={slug} />
         </>
       ) : slug === "sip-calculator" ? (
         <>
@@ -237,7 +244,7 @@ export default async function ToolPage({ params }: Props) {
 
           <SIPSeoContent />
 
-          <RelatedTools />
+          <RelatedTools currentSlug={slug} />
         </>
 
       ) : slug === "gst-calculator" ? (
@@ -258,7 +265,7 @@ export default async function ToolPage({ params }: Props) {
 
           <GSTSeoContent />
 
-          <RelatedTools />
+          <RelatedTools currentSlug={slug} />
         </>
 
       ) : slug === "percentage-calculator" ? (
@@ -279,7 +286,7 @@ export default async function ToolPage({ params }: Props) {
 
           <PercentageSeoContent />
 
-          <RelatedTools />
+          <RelatedTools currentSlug={slug} />
         </>
       ) : slug === "income-tax-calculator" ? (
         <>
@@ -301,7 +308,7 @@ export default async function ToolPage({ params }: Props) {
 
           <IncomeTaxSeoContent />
 
-          <RelatedTools />
+          <RelatedTools currentSlug={slug} />
         </>
 
       ) : slug === "discount-calculator" ? (
@@ -322,7 +329,7 @@ export default async function ToolPage({ params }: Props) {
 
           <DiscountSeoContent />
 
-          <RelatedTools />
+          <RelatedTools currentSlug={slug} />
         </>
 
       ) : slug === "age-calculator" ? (
@@ -343,7 +350,7 @@ export default async function ToolPage({ params }: Props) {
 
           <AgeSeoContent />
 
-          <RelatedTools />
+          <RelatedTools currentSlug={slug} />
         </>
 
       ) : slug === "date-difference" ? (
@@ -364,7 +371,7 @@ export default async function ToolPage({ params }: Props) {
 
           <DateDifferenceSeoContent />
 
-          <RelatedTools />
+          <RelatedTools currentSlug={slug} />
         </>
 
       ) : slug === "bmi-calculator" ? (
@@ -384,7 +391,23 @@ export default async function ToolPage({ params }: Props) {
 
           <BMISeoContent />
 
-          <RelatedTools />
+          <RelatedTools currentSlug={slug} />
+        </>
+      ) : slug === "salary-calculator" ? (
+        <>
+          <header className="tool-seo-header">
+            <h1>Salary Calculator - Calculate In-Hand Salary from CTC</h1>
+            <p>
+              Estimate your monthly take-home salary after employer-side CTC
+              components, employee PF, professional tax, other deductions and
+              estimated income tax.
+            </p>
+          </header>
+
+          <SalaryFaqSchema />
+          <ToolClient slug={slug} />
+          <SalarySeoContent />
+          <RelatedTools currentSlug={slug} />
         </>
       ) : (
         <ToolClient slug={slug} />

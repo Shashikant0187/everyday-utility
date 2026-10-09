@@ -13,6 +13,15 @@ const popularSlugs = [
   "jpg-to-pdf",
 ];
 
+const categories = [
+  { id: "all", label: "All tools", description: "Browse every available utility." },
+  { id: "money", label: "Finance", description: "Calculators for salary, tax, savings and everyday money decisions." },
+  { id: "daily", label: "Daily Life", description: "Quick answers for dates, health metrics and travel costs." },
+  { id: "documents", label: "PDF & Documents", description: "Convert and manage common document formats." },
+] as const;
+
+type CategoryId = (typeof categories)[number]["id"];
+
 function Section({
   id,
   title,
@@ -26,8 +35,7 @@ function Section({
   category: string;
   items: typeof tools;
 }) {
-  const categoryItems = items.filter((t) => t.category === category);
-
+  const categoryItems = items.filter((tool) => tool.category === category);
   if (categoryItems.length === 0) return null;
 
   return (
@@ -38,7 +46,6 @@ function Section({
           <p className="muted">{subtitle}</p>
         </div>
       </div>
-
       <div className="grid">
         {categoryItems.map((tool) => (
           <ToolCard key={tool.slug} tool={tool} />
@@ -50,176 +57,187 @@ function Section({
 
 export default function Home() {
   const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<CategoryId>("all");
 
   const filteredTools = useMemo(() => {
     const search = query.trim().toLowerCase();
+    return tools.filter((tool) => {
+      const matchesCategory =
+        activeCategory === "all" || tool.category === activeCategory;
+      if (!matchesCategory) return false;
+      if (!search) return true;
 
-    if (!search) return tools;
-
-    const searchWords = search
-      .split(/\s+/)
-      .filter(Boolean);
-
-    const matchesWholeWord = (text: string) => {
-      const words = text
+      const searchableText = [
+        tool.title,
+        tool.description,
+        tool.slug.replace(/-/g, " "),
+        tool.category,
+        tool.category === "money" ? "finance salary tax investment loan savings" : "",
+        tool.category === "daily" ? "age date health bmi fuel travel converter" : "",
+        tool.category === "documents" ? "pdf image word jpg convert merge compress document" : "",
+      ]
+        .join(" ")
         .toLowerCase()
-        .split(/[^a-z0-9]+/)
-        .filter(Boolean);
+        .replace(/[^a-z0-9]+/g, " ");
 
-      return searchWords.every((word) => words.includes(word));
-    };
+      const normalizedSearch = search.replace(/[^a-z0-9]+/g, " ").trim();
+      return normalizedSearch
+        .split(/\s+/)
+        .filter(Boolean)
+        .every((word) => searchableText.includes(word));
+    });
+  }, [query, activeCategory]);
 
-    return tools
-      .filter((tool) => {
-        return (
-          matchesWholeWord(tool.title) ||
-          matchesWholeWord(tool.description) ||
-          matchesWholeWord(tool.slug) ||
-          matchesWholeWord(tool.category)
-        );
-      })
-      .sort((a, b) => {
-        const aTitle = a.title.toLowerCase();
-        const bTitle = b.title.toLowerCase();
-
-        if (aTitle === search) return -1;
-        if (bTitle === search) return 1;
-
-        return 0;
-      });
-  }, [query]);
-
-  const popularTools = tools.filter((tool) =>
-    popularSlugs.includes(tool.slug)
-  );
+  const popularTools = tools.filter((tool) => popularSlugs.includes(tool.slug));
 
   const scrollToResults = () => {
-    document
-      .getElementById("tools-results")
-      ?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById("tools-results")?.scrollIntoView({ behavior: "smooth" });
   };
+
+  const chooseCategory = (category: CategoryId) => {
+    setActiveCategory(category);
+    setQuery("");
+    window.setTimeout(() => {
+      document.getElementById("tools-results")?.scrollIntoView({ behavior: "smooth" });
+    }, 0);
+  };
+
+  const isBrowsingAll = !query.trim() && activeCategory === "all";
 
   return (
     <main>
-      {/* HERO */}
       <section className="hero">
         <div className="hero-inner">
           <span className="badge">Free everyday tools</span>
-
           <h1>
             Simple tools for the things
             <br />
             you need to get done.
           </h1>
-
           <p>
             Calculate money, solve everyday questions and work with documents
             — without complicated software.
           </p>
 
-          <div className="search">
+          <div className="search" role="search">
             <input
+              aria-label="Search tools"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  scrollToResults();
-                }
+              onChange={(event) => setQuery(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") scrollToResults();
               }}
-              placeholder="What do you need to calculate or do?"
+              placeholder="Try salary, EMI, tax, age, PDF..."
             />
-
-            <button onClick={scrollToResults}>
-              Search
-            </button>
+            <button type="button" onClick={scrollToResults}>Search</button>
           </div>
 
-          {query && (
-            <p className="muted" style={{ marginTop: "12px" }}>
-              {filteredTools.length}{" "}
-              {filteredTools.length === 1 ? "tool" : "tools"} found for "
-              {query}"
+          {query.trim() && (
+            <p className="muted search-count" aria-live="polite">
+              {filteredTools.length} {filteredTools.length === 1 ? "tool" : "tools"} found for “{query.trim()}”
             </p>
           )}
         </div>
       </section>
 
-      {/* POPULAR TOOLS */}
-      {!query && (
+      <section className="section category-browser" aria-label="Browse tools by category">
+        <div className="section-head">
+          <div>
+            <h2>Explore tools</h2>
+            <p className="muted">Choose a category or search across the complete toolkit.</p>
+          </div>
+        </div>
+        <div className="category-chips" role="group" aria-label="Filter tools by category">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              type="button"
+              className={`category-chip${activeCategory === category.id ? " is-active" : ""}`}
+              aria-pressed={activeCategory === category.id}
+              onClick={() => chooseCategory(category.id)}
+            >
+              <span>{category.label}</span>
+              <span className="category-count">
+                {category.id === "all"
+                  ? tools.length
+                  : tools.filter((tool) => tool.category === category.id).length}
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {isBrowsingAll && (
         <section className="section">
           <div className="section-head">
             <div>
               <h2>Popular Tools</h2>
-              <p className="muted">
-                Quick access to tools people use most.
-              </p>
+              <p className="muted">Quick access to useful everyday tools.</p>
             </div>
           </div>
-
           <div className="grid">
-            {popularTools.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} />
-            ))}
+            {popularTools.map((tool) => <ToolCard key={tool.slug} tool={tool} />)}
           </div>
         </section>
       )}
 
-      {/* SEARCH RESULTS / CATEGORIES */}
       <div id="tools-results">
-        {query ? (
-          <>
-            {filteredTools.length > 0 ? (
-              <section className="section">
-                <div className="section-head">
-                  <div>
-                    <h2>Search Results</h2>
-                    <p className="muted">
-                      Tools matching your search.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid">
-                  {filteredTools.map((tool) => (
-                    <ToolCard key={tool.slug} tool={tool} />
-                  ))}
-                </div>
-              </section>
+        {query.trim() || activeCategory !== "all" ? (
+          <section className="section">
+            <div className="section-head">
+              <div>
+                <h2>{query.trim() ? "Search Results" : categories.find((item) => item.id === activeCategory)?.label}</h2>
+                <p className="muted">
+                  {filteredTools.length} {filteredTools.length === 1 ? "tool" : "tools"} available
+                  {query.trim() ? ` for “${query.trim()}”` : " in this category"}.
+                </p>
+              </div>
+              {(query.trim() || activeCategory !== "all") && (
+                <button
+                  type="button"
+                  className="clear-filters"
+                  onClick={() => {
+                    setQuery("");
+                    setActiveCategory("all");
+                  }}
+                >
+                  Clear filters
+                </button>
+              )}
+            </div>
+            {filteredTools.length ? (
+              <div className="grid">
+                {filteredTools.map((tool) => <ToolCard key={tool.slug} tool={tool} />)}
+              </div>
             ) : (
-              <section className="section">
-                <div className="section-head">
-                  <div>
-                    <h2>No tools found</h2>
-                    <p className="muted">
-                      Try searching for EMI, GST, age, PDF, percentage,
-                      SIP, or another tool.
-                    </p>
-                  </div>
-                </div>
-              </section>
+              <div className="empty-search">
+                <h3>No matching tools yet</h3>
+                <p>Try a shorter search such as “tax”, “salary”, “date”, or “PDF”.</p>
+                <button type="button" className="clear-filters" onClick={() => { setQuery(""); setActiveCategory("all"); }}>
+                  Show all tools
+                </button>
+              </div>
             )}
-          </>
+          </section>
         ) : (
           <>
             <Section
               id="money"
-              title="Money"
+              title="Finance Tools"
               subtitle="Make everyday financial calculations simple."
               category="money"
               items={tools}
             />
-
             <Section
               id="daily"
-              title="Daily Life"
+              title="Daily Life Tools"
               subtitle="Small tools for everyday decisions."
               category="daily"
               items={tools}
             />
-
             <Section
               id="documents"
-              title="Documents"
+              title="PDF & Document Tools"
               subtitle="Useful document utilities, right in your browser."
               category="documents"
               items={tools}
