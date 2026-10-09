@@ -186,12 +186,29 @@ export default async function ToolPage({ params }: Props) {
       {slug === "emi-calculator" ? (
         <>
           <header className="tool-seo-header">
-            <h1>BMI Calculator - Calculate Body Mass Index</h1>
-
-            <p>
-              Use our free BMI calculator to calculate Body Mass Index from your
-              weight and height and see the corresponding BMI category.
-            </p>
+            {slug === "emi-calculator" ? (
+              <>
+                <h1>EMI Calculator - Calculate Loan EMI Online</h1>
+                <p>
+                  Calculate your monthly loan EMI, total interest,
+                  and total repayment using our free EMI calculator.
+                </p>
+              </>
+            ) : slug === "bmi-calculator" ? (
+              <>
+                <h1>BMI Calculator - Calculate Body Mass Index</h1>
+                <p>
+                  Use our free BMI calculator to calculate Body Mass
+                  Index from your weight and height and see the
+                  corresponding BMI category.
+                </p>
+              </>
+            ) : (
+              <>
+                <h1>{seoData[slug]?.title ?? "Online Calculator"}</h1>
+                <p>{seoData[slug]?.description ?? "Use our free online calculator."}</p>
+              </>
+            )}
           </header>
 
           <EMIFaqSchema />
