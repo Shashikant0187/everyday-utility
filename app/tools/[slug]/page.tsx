@@ -22,6 +22,7 @@ import IncomeTaxSeoContent from "../../../components/IncomeTaxSeoContent";
 import IncomeTaxFaqSchema from "../../../components/IncomeTaxFaqSchema";
 import SalarySeoContent from "../../../components/SalarySeoContent";
 import SalaryFaqSchema from "../../../components/SalaryFaqSchema";
+import MergePdfFAQ from "../../../components/tools/merge-pdf/page";
 
 
 type Props = {
@@ -408,6 +409,11 @@ export default async function ToolPage({ params }: Props) {
           <ToolClient slug={slug} />
           <SalarySeoContent />
           <RelatedTools currentSlug={slug} />
+        </>
+      ) : slug === "merge-pdf" ? (
+        <>
+          <ToolClient slug={slug} />
+          <MergePdfFAQ />
         </>
       ) : (
         <ToolClient slug={slug} />

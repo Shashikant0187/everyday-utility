@@ -1,250 +1,203 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
-import { tools } from "../lib/tools";
-import ToolCard from "../components/ToolCard";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
 
-const popularSlugs = [
-  "emi-calculator",
-  "sip-calculator",
-  "gst-calculator",
-  "percentage-calculator",
-  "age-calculator",
-  "jpg-to-pdf",
+type Tool = {
+  name: string;
+  description: string;
+  href: string;
+  category: "PDF & Documents" | "Finance" | "Everyday Calculators" | "Converters";
+  icon: string;
+};
+
+const tools: Tool[] = [
+  { name: "Merge PDF", description: "Combine multiple PDFs", href: "/tools/merge-pdf", category: "PDF & Documents", icon: "▤" },
+  { name: "Compress PDF", description: "Reduce PDF file size", href: "/tools/compress-pdf", category: "PDF & Documents", icon: "⇩" },
+  { name: "JPG to PDF", description: "Convert images to PDF", href: "/tools/jpg-to-pdf", category: "PDF & Documents", icon: "▧" },
+  { name: "PDF to JPG", description: "Export PDF pages as images", href: "/tools/pdf-to-jpg", category: "PDF & Documents", icon: "▣" },
+  { name: "PDF to Word", description: "Extract text from PDF files", href: "/tools/pdf-to-word", category: "PDF & Documents", icon: "W" },
+  { name: "Salary Calculator", description: "Estimate your in-hand salary", href: "/tools/salary-calculator", category: "Finance", icon: "₹" },
+  { name: "EMI Calculator", description: "Calculate loan EMI and interest", href: "/tools/emi-calculator", category: "Finance", icon: "▦" },
+  { name: "Income Tax Calculator", description: "Estimate income tax liability", href: "/tools/income-tax-calculator", category: "Finance", icon: "%" },
+  { name: "SIP Calculator", description: "Estimate returns on monthly investing", href: "/tools/sip-calculator", category: "Finance", icon: "↗" },
+  { name: "GST Calculator", description: "Calculate GST-inclusive or exclusive price", href: "/tools/gst-calculator", category: "Finance", icon: "GST" },
+  { name: "Percentage Calculator", description: "Solve common percentage problems", href: "/tools/percentage-calculator", category: "Everyday Calculators", icon: "%" },
+  { name: "Discount Calculator", description: "Find sale price and savings", href: "/tools/discount-calculator", category: "Everyday Calculators", icon: "−" },
+  { name: "Age Calculator", description: "Calculate your exact age", href: "/tools/age-calculator", category: "Everyday Calculators", icon: "▦" },
+  { name: "Date Difference", description: "Count days between two dates", href: "/tools/date-difference", category: "Everyday Calculators", icon: "◷" },
+  { name: "BMI Calculator", description: "Calculate body mass index", href: "/tools/bmi-calculator", category: "Everyday Calculators", icon: "＋" },
+  { name: "Unit Converter", description: "Convert common units quickly", href: "/tools/unit-converter", category: "Converters", icon: "⇄" },
+  { name: "Fuel Cost Calculator", description: "Estimate the cost of a trip", href: "/tools/fuel-cost-calculator", category: "Everyday Calculators", icon: "⌁" },
 ];
 
 const categories = [
-  { id: "all", label: "All tools", description: "Browse every available utility." },
-  { id: "money", label: "Finance", description: "Calculators for salary, tax, savings and everyday money decisions." },
-  { id: "daily", label: "Daily Life", description: "Quick answers for dates, health metrics and travel costs." },
-  { id: "documents", label: "PDF & Documents", description: "Convert and manage common document formats." },
+  { name: "PDF & Document Tools", key: "PDF & Documents", description: "Merge, compress and convert your PDF files.", icon: "▤", tone: "rose", href: "/tools/merge-pdf" },
+  { name: "Finance Calculators", key: "Finance", description: "EMI, salary, income tax, SIP, GST and more.", icon: "▥", tone: "green", href: "/tools/emi-calculator" },
+  { name: "Everyday Calculators", key: "Everyday Calculators", description: "Percentage, age, date, BMI, discount and more.", icon: "▦", tone: "blue", href: "/tools/percentage-calculator" },
+  { name: "Unit Converters", key: "Converters", description: "Convert length, weight, temperature and more.", icon: "⇄", tone: "purple", href: "/tools/unit-converter" },
 ] as const;
 
-type CategoryId = (typeof categories)[number]["id"];
-
-function Section({
-  id,
-  title,
-  subtitle,
-  category,
-  items,
-}: {
-  id: string;
-  title: string;
-  subtitle: string;
-  category: string;
-  items: typeof tools;
-}) {
-  const categoryItems = items.filter((tool) => tool.category === category);
-  if (categoryItems.length === 0) return null;
-
-  return (
-    <section id={id} className="section">
-      <div className="section-head">
-        <div>
-          <h2>{title}</h2>
-          <p className="muted">{subtitle}</p>
-        </div>
-      </div>
-      <div className="grid">
-        {categoryItems.map((tool) => (
-          <ToolCard key={tool.slug} tool={tool} />
-        ))}
-      </div>
-    </section>
-  );
+function SearchIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 4.5 4.5" /></svg>;
 }
 
-export default function Home() {
+export default function HomePage() {
   const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<CategoryId>("all");
-
   const filteredTools = useMemo(() => {
-    const search = query.trim().toLowerCase();
-    return tools.filter((tool) => {
-      const matchesCategory =
-        activeCategory === "all" || tool.category === activeCategory;
-      if (!matchesCategory) return false;
-      if (!search) return true;
+    const q = query.trim().toLowerCase();
+    return q ? tools.filter((tool) => `${tool.name} ${tool.description} ${tool.category}`.toLowerCase().includes(q)) : tools;
+  }, [query]);
 
-      const searchableText = [
-        tool.title,
-        tool.description,
-        tool.slug.replace(/-/g, " "),
-        tool.category,
-        tool.category === "money" ? "finance salary tax investment loan savings" : "",
-        tool.category === "daily" ? "age date health bmi fuel travel converter" : "",
-        tool.category === "documents" ? "pdf image word jpg convert merge compress document" : "",
-      ]
-        .join(" ")
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, " ");
-
-      const normalizedSearch = search.replace(/[^a-z0-9]+/g, " ").trim();
-      return normalizedSearch
-        .split(/\s+/)
-        .filter(Boolean)
-        .every((word) => searchableText.includes(word));
-    });
-  }, [query, activeCategory]);
-
-  const popularTools = tools.filter((tool) => popularSlugs.includes(tool.slug));
-
-  const scrollToResults = () => {
-    document.getElementById("tools-results")?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const chooseCategory = (category: CategoryId) => {
-    setActiveCategory(category);
-    setQuery("");
-    window.setTimeout(() => {
-      document.getElementById("tools-results")?.scrollIntoView({ behavior: "smooth" });
-    }, 0);
-  };
-
-  const isBrowsingAll = !query.trim() && activeCategory === "all";
+  const popularTools = query ? filteredTools : tools.slice(0, 10);
 
   return (
-    <main>
-      <section className="hero">
-        <div className="hero-inner">
-          <span className="badge">Free everyday tools</span>
-          <h1>
-            Simple tools for the things
-            <br />
-            you need to get done.
-          </h1>
-          <p>
-            Calculate money, solve everyday questions and work with documents
-            — without complicated software.
-          </p>
-
-          <div className="search" role="search">
-            <input
-              aria-label="Search tools"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") scrollToResults();
-              }}
-              placeholder="Try salary, EMI, tax, age, PDF..."
-            />
-            <button type="button" onClick={scrollToResults}>Search</button>
-          </div>
-
-          {query.trim() && (
-            <p className="muted search-count" aria-live="polite">
-              {filteredTools.length} {filteredTools.length === 1 ? "tool" : "tools"} found for “{query.trim()}”
-            </p>
-          )}
-        </div>
-      </section>
-
-      <section className="section category-browser" aria-label="Browse tools by category">
-        <div className="section-head">
-          <div>
-            <h2>Explore tools</h2>
-            <p className="muted">Choose a category or search across the complete toolkit.</p>
-          </div>
-        </div>
-        <div className="category-chips" role="group" aria-label="Filter tools by category">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              type="button"
-              className={`category-chip${activeCategory === category.id ? " is-active" : ""}`}
-              aria-pressed={activeCategory === category.id}
-              onClick={() => chooseCategory(category.id)}
-            >
-              <span>{category.label}</span>
-              <span className="category-count">
-                {category.id === "all"
-                  ? tools.length
-                  : tools.filter((tool) => tool.category === category.id).length}
-              </span>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {isBrowsingAll && (
-        <section className="section">
-          <div className="section-head">
-            <div>
-              <h2>Popular Tools</h2>
-              <p className="muted">Quick access to useful everyday tools.</p>
+    <>
+      <Header />
+      <main className="eu-home">
+        <section className="eu-hero">
+          <div className="eu-home__container eu-hero__grid">
+            <div className="eu-hero__copy">
+              <span className="eu-eyebrow"><span aria-hidden="true">✦</span> 17+ free online tools</span>
+              <h1>Everyday tasks,<br /><span>made simpler.</span></h1>
+              <p className="eu-hero__intro">Free, easy-to-use calculators, converters and PDF tools for your everyday needs. Fast, practical and available online.</p>
+              <form className="eu-home-search" role="search" onSubmit={(event) => event.preventDefault()}>
+                <SearchIcon />
+                <input value={query} onChange={(event) => setQuery(event.target.value)} type="search" placeholder="Search for a tool (e.g. PDF, EMI, BMI)" aria-label="Search all tools" />
+                <button type="submit"><SearchIcon /><span>Search</span></button>
+              </form>
+              <div className="eu-popular-searches">
+                <span>Popular searches:</span>
+                {["Merge PDF", "Compress PDF", "Salary Calculator", "EMI Calculator", "JPG to PDF"].map((term) => (
+                  <button type="button" key={term} onClick={() => setQuery(term)}>{term}</button>
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="grid">
-            {popularTools.map((tool) => <ToolCard key={tool.slug} tool={tool} />)}
+            <div
+              className="eu-hero-art"
+              aria-label="Everyday Utility tools illustration"
+            >
+              <div className="eu-art-glow" />
+
+              <div className="eu-visual-heading">
+                <span className="eu-visual-eyebrow">YOUR EVERYDAY TOOLKIT</span>
+                <h2>
+                  Everything you need.
+                  <br />
+                  <span>All in one place.</span>
+                </h2>
+                <p>Simple tools for everyday tasks and decisions.</p>
+              </div>
+
+              <div className="eu-visual-cards">
+                <Link
+                  href="/tools/merge-pdf"
+                  className="eu-visual-card eu-visual-card--pdf"
+                >
+                  <span className="eu-visual-icon">PDF</span>
+                  <span className="eu-visual-card-copy">
+                    <strong>Merge PDF</strong>
+                    <small>Combine documents</small>
+                  </span>
+                  <span className="eu-visual-arrow">↗</span>
+                </Link>
+
+                <Link
+                  href="/tools/emi-calculator"
+                  className="eu-visual-card eu-visual-card--finance"
+                >
+                  <span className="eu-visual-icon">₹</span>
+                  <span className="eu-visual-card-copy">
+                    <strong>EMI Calculator</strong>
+                    <small>Plan your monthly payments</small>
+                  </span>
+                  <span className="eu-visual-arrow">↗</span>
+                </Link>
+
+                <Link
+                  href="/tools/jpg-to-pdf"
+                  className="eu-visual-card eu-visual-card--image"
+                >
+                  <span className="eu-visual-icon">▧</span>
+                  <span className="eu-visual-card-copy">
+                    <strong>JPG to PDF</strong>
+                    <small>Convert images easily</small>
+                  </span>
+                  <span className="eu-visual-arrow">↗</span>
+                </Link>
+
+                <Link
+                  href="/tools/percentage-calculator"
+                  className="eu-visual-card eu-visual-card--calc"
+                >
+                  <span className="eu-visual-icon">%</span>
+                  <span className="eu-visual-card-copy">
+                    <strong>Percentage</strong>
+                    <small>Get quick calculations</small>
+                  </span>
+                  <span className="eu-visual-arrow">↗</span>
+                </Link>
+              </div>
+
+              <div className="eu-visual-note">
+                <span className="eu-visual-note-icon">✓</span>
+                <span>
+                  <strong>Ready when you need it</strong>
+                  <small>Useful tools, right in your browser</small>
+                </span>
+              </div>
+            </div>
           </div>
         </section>
-      )}
 
-      <div id="tools-results">
-        {query.trim() || activeCategory !== "all" ? (
-          <section className="section">
-            <div className="section-head">
-              <div>
-                <h2>{query.trim() ? "Search Results" : categories.find((item) => item.id === activeCategory)?.label}</h2>
-                <p className="muted">
-                  {filteredTools.length} {filteredTools.length === 1 ? "tool" : "tools"} available
-                  {query.trim() ? ` for “${query.trim()}”` : " in this category"}.
-                </p>
-              </div>
-              {(query.trim() || activeCategory !== "all") && (
-                <button
-                  type="button"
-                  className="clear-filters"
-                  onClick={() => {
-                    setQuery("");
-                    setActiveCategory("all");
-                  }}
-                >
-                  Clear filters
-                </button>
-              )}
+        <section className="eu-section eu-categories">
+          <div className="eu-home__container">
+            <div className="eu-section-heading">
+              <h2>Explore our tool categories</h2>
+              <p>Find the right tool for your needs. Simple, practical and free to use.</p>
             </div>
-            {filteredTools.length ? (
-              <div className="grid">
-                {filteredTools.map((tool) => <ToolCard key={tool.slug} tool={tool} />)}
+            <div className="eu-category-grid">
+              {categories.map((category) => (
+                <Link className={`eu-category-card eu-tone--${category.tone}`} href={category.href} key={category.key}>
+                  <span className="eu-category-icon">{category.icon}</span>
+                  <span className="eu-category-copy"><strong>{category.name}</strong><small>{category.description}</small></span>
+                  <span className="eu-category-arrow" aria-hidden="true">›</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="eu-section eu-tools-section" id="popular-tools">
+          <div className="eu-home__container">
+            <div className="eu-tools-heading">
+              <div><h2>{query ? "Search results" : "Popular tools"}</h2><p>{query ? `${filteredTools.length} matching tool${filteredTools.length === 1 ? "" : "s"}` : "Useful tools, ready when you need them."}</p></div>
+              {query ? <button className="eu-clear-search" type="button" onClick={() => setQuery("")}>Clear search ×</button> : <Link href="/tools/merge-pdf">Explore PDF tools <span aria-hidden="true">→</span></Link>}
+            </div>
+            {popularTools.length ? (
+              <div className="eu-tools-grid">
+                {popularTools.map((tool, index) => (
+                  <Link className="eu-tool-card" href={tool.href} key={tool.name}>
+                    <span className={`eu-tool-icon eu-tool-icon--${index % 5}`}>{tool.icon}</span>
+                    <span className="eu-tool-card__copy"><strong>{tool.name}</strong><small>{tool.description}</small></span>
+                    <span className="eu-tool-card__arrow" aria-hidden="true">›</span>
+                  </Link>
+                ))}
               </div>
-            ) : (
-              <div className="empty-search">
-                <h3>No matching tools yet</h3>
-                <p>Try a shorter search such as “tax”, “salary”, “date”, or “PDF”.</p>
-                <button type="button" className="clear-filters" onClick={() => { setQuery(""); setActiveCategory("all"); }}>
-                  Show all tools
-                </button>
-              </div>
-            )}
-          </section>
-        ) : (
-          <>
-            <Section
-              id="money"
-              title="Finance Tools"
-              subtitle="Make everyday financial calculations simple."
-              category="money"
-              items={tools}
-            />
-            <Section
-              id="daily"
-              title="Daily Life Tools"
-              subtitle="Small tools for everyday decisions."
-              category="daily"
-              items={tools}
-            />
-            <Section
-              id="documents"
-              title="PDF & Document Tools"
-              subtitle="Useful document utilities, right in your browser."
-              category="documents"
-              items={tools}
-            />
-          </>
-        )}
-      </div>
-    </main>
+            ) : <div className="eu-empty-search"><strong>No matching tools found.</strong><span>Try searching for PDF, salary, EMI, age or percentage.</span></div>}
+          </div>
+        </section>
+
+        <section className="eu-trust-strip eu-home__container" aria-label="Everyday Utility benefits">
+          <div><span>✓</span><p><strong>Easy to use</strong><small>Clear, focused workflows</small></p></div>
+          <div><span>◇</span><p><strong>17+ useful tools</strong><small>Everyday needs in one place</small></p></div>
+          <div><span>ϟ</span><p><strong>Online access</strong><small>No software installation</small></p></div>
+          <div><span>◎</span><p><strong>Works across devices</strong><small>Responsive by design</small></p></div>
+        </section>
+      </main>
+      <Footer />
+    </>
   );
 }

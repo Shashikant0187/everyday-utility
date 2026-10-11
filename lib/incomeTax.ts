@@ -317,15 +317,14 @@ export function calculateIncomeTax(
   input: IncomeTaxInput,
   regime: TaxRegime
 ): TaxCalculation {
-  const grossSalary = Math.max(
-    0,
-    input.grossSalary
-  );
+  // Sanitize external inputs so NaN/Infinity cannot contaminate the result.
+  const grossSalary = Number.isFinite(input.grossSalary)
+    ? Math.max(0, input.grossSalary)
+    : 0;
 
-  const age = Math.max(
-    0,
-    input.age
-  );
+  const age = Number.isFinite(input.age)
+    ? Math.min(120, Math.max(0, input.age))
+    : 0;
 
   const residentIndividual =
     input.residentIndividual ?? true;

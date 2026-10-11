@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import {
   calculateSalary,
   type SalaryTaxRegime,
@@ -26,17 +26,22 @@ function NumberField({
   hint?: string;
   max?: number;
 }) {
+  const inputId = useId();
+
   return (
     <div className="field">
-      <label>{label}</label>
+      <label htmlFor={inputId}>{label}</label>
       <input
+        id={inputId}
         type="number"
         min="0"
         max={max}
         value={value}
-        onChange={(event) =>
-          onChange(event.target.value === "" ? 0 : Math.max(0, Number(event.target.value)))
-        }
+        onChange={(event) => {
+          const parsed = event.target.value === "" ? 0 : Number(event.target.value);
+          const finiteValue = Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
+          onChange(max === undefined ? finiteValue : Math.min(finiteValue, max));
+        }}
       />
       {hint && <small className="muted">{hint}</small>}
     </div>
@@ -112,18 +117,21 @@ export default function SalaryCalculator() {
           label="Annual variable pay / bonus (₹)"
           value={variablePay}
           onChange={setVariablePay}
+          max={annualCtc}
           hint="Included in CTC but not guaranteed monthly pay."
         />
         <NumberField
           label="Employer PF included in CTC (annual ₹)"
           value={employerPf}
           onChange={setEmployerPf}
+          max={Math.max(0, annualCtc - variablePay)}
           hint="Set to 0 if not included in your CTC."
         />
         <NumberField
           label="Gratuity included in CTC (annual ₹)"
           value={gratuity}
           onChange={setGratuity}
+          max={Math.max(0, annualCtc - variablePay - employerPf)}
           hint="Set to 0 if not included or not known."
         />
         <NumberField
@@ -144,7 +152,7 @@ export default function SalaryCalculator() {
           onChange={setOtherMonthlyDeductions}
           hint="Insurance, meal card recovery or other payroll deductions."
         />
-        <NumberField label="Age" value={age} onChange={setAge} />
+        <NumberField label="Age" value={age} onChange={setAge} max={120} />
       </div>
 
       <div className="field salary-checkbox">

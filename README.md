@@ -1,46 +1,22 @@
-# Everyday Utility — MVP
+# Everyday Utility — Salary Calculator targeted patch
 
-A mobile-first utility website for Money, Daily Life and Documents.
+This patch contains targeted, low-risk improvements to the uploaded Salary Calculator implementation.
 
-## Current V1 tools
+## Files
+- `components/SalaryCalculator.tsx` — associates labels with their inputs, safely sanitizes numeric input, enforces configured UI maxima, and prevents variable pay/employer PF/gratuity fields from exceeding the available CTC components.
+- `lib/salaryCalculator.ts` — current salary calculation engine, included unchanged for a complete dependency set.
+- `lib/incomeTax.ts` — current tax engine with defensive handling for non-finite gross-salary and age inputs.
 
-### Money
-- EMI Calculator
-- SIP Calculator
-- GST Calculator
-- Percentage Calculator
-- Discount Calculator
+## Apply
+Copy these files into the corresponding locations in the existing Next.js project. Back up the current files first. Do not replace routing, tool catalog, global CSS, or other files with this patch.
 
-### Daily Life
-- Age Calculator
-- Date Difference
-- BMI Calculator
-- Fuel Cost Calculator
-- Unit Converter (catalogued; implementation next)
+## Important
+This patch does not certify the tax engine as legally authoritative for FY 2026–27. The tax slab/rebate/surcharge assumptions still need to be checked against the applicable official rules and tested with reference examples before relying on results for financial decisions. It also does not include the full project, so a full application build cannot be run from this patch alone.
 
-### Documents
-- JPG to PDF
-- Merge PDF
-- PDF to JPG (next)
-- PDF to Word (next)
-- Compress PDF (next)
+## Run included smoke tests
+From this folder, run:
 
-## Run locally
-
-```bash
-npm install
-npm run dev
+```sh
+tsc --strict --target ES2020 --module commonjs --outDir build lib/incomeTax.ts lib/salaryCalculator.ts
+node tests/smoke-test.cjs
 ```
-
-Open http://localhost:3000
-
-## Product strategy
-
-1. Launch useful tools first.
-2. Add SEO landing content around each tool.
-3. Add analytics + Search Console.
-4. Measure which tools acquire traffic.
-5. Expand the winners.
-6. Monetize with ads first, then premium document features and other carefully selected revenue streams.
-
-Do not bulk-publish thin AI pages. AI should accelerate research, copy, FAQs and internal production, while every public page must provide genuine utility.
