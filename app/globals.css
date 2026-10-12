@@ -3485,3 +3485,124 @@ select {
     padding: 16px 0;
   }
 }
+
+/* PDF tools landing page */
+.eu-pdf-page {
+  min-height: 100vh;
+  background: #f7f9fc;
+  color: #142b4f;
+  padding: 56px 24px 80px;
+}
+
+.eu-pdf-container {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.eu-pdf-breadcrumb {
+  margin-bottom: 36px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.eu-pdf-breadcrumb a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.eu-pdf-eyebrow {
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.eu-pdf-heading {
+  font-size: clamp(34px, 5vw, 52px);
+  line-height: 1.12;
+  letter-spacing: -1.8px;
+  font-weight: 800;
+  margin: 0 0 18px;
+}
+
+.eu-pdf-intro {
+  color: #64748b;
+  font-size: 17px;
+  line-height: 1.8;
+  max-width: 680px;
+  margin-bottom: 42px;
+}
+
+.eu-pdf-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.eu-pdf-card {
+  display: block;
+  padding: 28px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+  transition: transform 180ms ease, box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.eu-pdf-card:hover {
+  transform: translateY(-4px);
+  border-color: #93baff;
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.09);
+}
+
+.eu-pdf-card h2 {
+  color: #142b4f;
+  font-size: 21px;
+  font-weight: 750;
+  margin: 0 0 12px;
+}
+
+.eu-pdf-card p {
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0 0 22px;
+}
+
+.eu-pdf-card span {
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.eu-pdf-note {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-top: 32px;
+  max-width: 780px;
+}
+
+@media (max-width: 800px) {
+  .eu-pdf-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 540px) {
+  .eu-pdf-page {
+    padding: 32px 18px 56px;
+  }
+
+  .eu-pdf-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .eu-pdf-card {
+    padding: 23px;
+  }
+}

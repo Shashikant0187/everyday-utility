@@ -1093,7 +1093,7 @@ function CompressPdf() {
       link.remove();
 
       URL.revokeObjectURL(url);
-
+      console.log("Selected file:", file.name, file.size, "bytes");
       const originalMB =
         file.size / 1024 / 1024;
 
