@@ -23,6 +23,10 @@ import IncomeTaxFaqSchema from "../../../components/IncomeTaxFaqSchema";
 import SalarySeoContent from "../../../components/SalarySeoContent";
 import SalaryFaqSchema from "../../../components/SalaryFaqSchema";
 import MergePdfFAQ from "../../../components/tools/merge-pdf/page";
+import CompressPdfFAQ from "../../../components/tools/compress-pdf/page";
+import JpgToPdfFAQ from "../../../components/tools/jpg-to-pdf/page";
+import PdfToJpgFAQ from "../../../components/tools/pdf-to-jpg/page";
+import PdfToWordFAQ from "../../../components/tools/pdf-to-word/page";
 
 
 type Props = {
@@ -409,6 +413,26 @@ export default async function ToolPage({ params }: Props) {
           <ToolClient slug={slug} />
           <SalarySeoContent />
           <RelatedTools currentSlug={slug} />
+        </>
+      ) : slug === "pdf-to-word" ? (
+        <>
+          <ToolClient slug={slug} />
+          <PdfToWordFAQ />
+        </>
+      ) : slug === "pdf-to-jpg" ? (
+        <>
+          <ToolClient slug={slug} />
+          <PdfToJpgFAQ />
+        </>
+      ) : slug === "jpg-to-pdf" ? (
+        <>
+          <ToolClient slug={slug} />
+          <JpgToPdfFAQ />
+        </>
+      ) : slug === "compress-pdf" ? (
+        <>
+          <ToolClient slug={slug} />
+          <CompressPdfFAQ />
         </>
       ) : slug === "merge-pdf" ? (
         <>
