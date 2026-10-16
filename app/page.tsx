@@ -34,7 +34,7 @@ const tools: Tool[] = [
 ];
 
 const categories = [
-  { name: "PDF & Document Tools", key: "PDF & Documents", description: "Merge, compress and convert your PDF files.", icon: "▤", tone: "rose", href: "/tools/merge-pdf" },
+  { name: "PDF & Document Tools", key: "PDF & Documents", description: "Merge, compress and convert your PDF files.", icon: "▤", tone: "rose", href: "/pdf-tools" },
   { name: "Finance Calculators", key: "Finance", description: "EMI, salary, income tax, SIP, GST and more.", icon: "▥", tone: "green", href: "/tools/emi-calculator" },
   { name: "Everyday Calculators", key: "Everyday Calculators", description: "Percentage, age, date, BMI, discount and more.", icon: "▦", tone: "blue", href: "/tools/percentage-calculator" },
   { name: "Unit Converters", key: "Converters", description: "Convert length, weight, temperature and more.", icon: "⇄", tone: "purple", href: "/tools/unit-converter" },
@@ -174,7 +174,7 @@ export default function HomePage() {
           <div className="eu-home__container">
             <div className="eu-tools-heading">
               <div><h2>{query ? "Search results" : "Popular tools"}</h2><p>{query ? `${filteredTools.length} matching tool${filteredTools.length === 1 ? "" : "s"}` : "Useful tools, ready when you need them."}</p></div>
-              {query ? <button className="eu-clear-search" type="button" onClick={() => setQuery("")}>Clear search ×</button> : <Link href="/tools/merge-pdf">Explore PDF tools <span aria-hidden="true">→</span></Link>}
+              {query ? <button className="eu-clear-search" type="button" onClick={() => setQuery("")}>Clear search ×</button> : <Link href="/pdf-tools">Explore PDF tools <span aria-hidden="true">→</span></Link>}
             </div>
             {popularTools.length ? (
               <div className="eu-tools-grid">
