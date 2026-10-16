@@ -8,6 +8,15 @@ import IncomeTax from "../../../components/IncomeTax";
 
 import SalaryCalculator from "../../../components/SalaryCalculator";
 
+import {
+  ImageCropper,
+  JpgToPng,
+  PngToJpg,
+  WebpToJpg,
+  ImagesToPdf,
+} from "../../../components/ImageTools";
+
+
 
 
 
@@ -207,6 +216,17 @@ export default function ToolClient({ slug }: { slug: string }) {
   else if (slug === "fuel-cost-calculator") content = <Fuel />;
 
   else if (slug === "jpg-to-pdf") content = <JpgToPdf />;
+  else if (slug === "image-compressor") content = <ImageCompressor />;
+  else if (slug === "image-resizer") {
+    content = <ImageResizer />;
+}
+
+  else if (slug === "image-cropper") content = <ImageCropper />;
+  else if (slug === "jpg-to-png") content = <JpgToPng />;
+  else if (slug === "png-to-jpg") content = <PngToJpg />;
+  else if (slug === "webp-to-jpg") content = <WebpToJpg />;
+  else if (slug === "images-to-pdf") content = <ImagesToPdf />;
+
 
   else if (slug === "pdf-to-jpg") content = <PdfToJpg />;
 
@@ -294,12 +314,18 @@ export default function ToolClient({ slug }: { slug: string }) {
   }
 
   return (
-    <>
-      <div className="tool-back">
-        <button onClick={goBack}>← Back to all tools</button>
-      </div>
-      {content}
-    </>
+    <div className="pdf-tool-page eu-generic-tool-page">
+      <nav className="pdf-tool-breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="/">All tools</a>
+        <span aria-hidden="true">/</span>
+        <span>{slug.replace(/-/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase())}</span>
+      </nav>
+      <section className="pdf-tool-workspace" aria-label="Tool workspace">
+        {content}
+      </section>
+    </div>
   );
 
 }
@@ -2865,6 +2891,557 @@ function MergePdf() {
 function DateDifference() { const [a, setA] = useState("2026-01-01"), [b, setB] = useState("2026-10-08"); const days = Math.abs(Math.round((new Date(b).getTime() - new Date(a).getTime()) / 86400000)); return <Box><div className="form-grid"><div className="field"><label>Start date</label><input type="date" value={a} onChange={e => setA(e.target.value)} /></div><div className="field"><label>End date</label><input type="date" value={b} onChange={e => setB(e.target.value)} /></div></div><div className="result"><span>Difference</span><strong>{days.toLocaleString("en-IN")} days</strong></div></Box> }
 
 function ComingSoon() { return <Box><h2>Coming soon</h2><p className="muted">This tool is in the next build. The product architecture is ready so we can add utilities quickly.</p></Box> }
+
+/**
+ * Image Compressor
+ *
+ * Features:
+ * - Accepts JPG, PNG, and WebP images.
+ * - Processes images locally in the browser.
+ * - Allows users to adjust image quality.
+ * - Displays original and compressed file sizes.
+ * - Provides a download link for the result.
+ *
+ * Styling:
+ * Uses the existing project classes:
+ * Box, field, primary, result, and muted.
+ */
+function ImageCompressor() {
+  // Store the uploaded image.
+  const [file, setFile] = useState<File | null>(null);
+
+  // Compression quality ranges from 0.1 to 1.
+  const [quality, setQuality] = useState(0.7);
+
+  // Store preview URLs for the original and compressed images.
+  const [originalUrl, setOriginalUrl] = useState("");
+  const [compressedUrl, setCompressedUrl] = useState("");
+
+  // Store the generated file's size and processing status.
+  const [compressedSize, setCompressedSize] = useState(0);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  /**
+   * Release temporary browser URLs when the component unmounts.
+   * This helps prevent unnecessary memory usage.
+   */
+  // Note: Existing preview URLs are also released when a new image is selected.
+
+  /**
+   * Handle image selection and validate the file type.
+   */
+  function chooseFile(selectedFile?: File) {
+    if (!selectedFile) return;
+
+    const supportedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+    ];
+
+    if (!supportedTypes.includes(selectedFile.type)) {
+      setError("Please select a JPG, PNG, or WebP image.");
+      return;
+    }
+
+    // Release previous preview URLs before replacing them.
+    if (originalUrl) URL.revokeObjectURL(originalUrl);
+    if (compressedUrl) URL.revokeObjectURL(compressedUrl);
+
+    // Save the selected file and create its preview.
+    setFile(selectedFile);
+    setOriginalUrl(URL.createObjectURL(selectedFile));
+
+    // Clear results from the previous image.
+    setCompressedUrl("");
+    setCompressedSize(0);
+    setError("");
+  }
+
+  /**
+   * Convert the selected image using the browser Canvas API.
+   */
+  async function compressImage() {
+    if (!file) return;
+
+    setBusy(true);
+    setError("");
+
+    let sourceUrl = "";
+
+    try {
+      // Create a temporary URL so the browser can load the image.
+      sourceUrl = URL.createObjectURL(file);
+
+      const image = new Image();
+      image.src = sourceUrl;
+
+      // Wait until the browser has loaded the image.
+      await new Promise<void>((resolve, reject) => {
+        image.onload = () => resolve();
+        image.onerror = () =>
+          reject(new Error("The selected image could not be loaded."));
+      });
+
+      // Create a canvas using the original image dimensions.
+      const canvas = document.createElement("canvas");
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+
+      const context = canvas.getContext("2d");
+
+      if (!context) {
+        throw new Error("Image processing is not supported by this browser.");
+      }
+
+      // Draw the original image onto the canvas.
+      context.drawImage(image, 0, 0);
+
+      /**
+       * Preserve PNG output for PNG uploads.
+       * Encode JPG and WebP uploads as JPEG.
+       *
+       * JPEG does not support transparency.
+       * PNG encoding does not use the quality slider.
+       */
+      const outputType =
+        file.type === "image/png" ? "image/png" : "image/jpeg";
+
+      // Generate the compressed image as a Blob.
+      const compressedBlob = await new Promise<Blob>(
+        (resolve, reject) => {
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                resolve(blob);
+              } else {
+                reject(new Error("The browser could not create the image."));
+              }
+            },
+            outputType,
+            quality
+          );
+        }
+      );
+
+      // Release the temporary source URL.
+      URL.revokeObjectURL(sourceUrl);
+      sourceUrl = "";
+
+      // Release the previous result URL, if one exists.
+      if (compressedUrl) {
+        URL.revokeObjectURL(compressedUrl);
+      }
+
+      // Store the new result and its actual file size.
+      setCompressedUrl(URL.createObjectURL(compressedBlob));
+      setCompressedSize(compressedBlob.size);
+    } catch (err) {
+      // Show a readable error if processing fails.
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong while compressing the image."
+      );
+    } finally {
+      // Always release temporary resources and reset the loading state.
+      if (sourceUrl) URL.revokeObjectURL(sourceUrl);
+      setBusy(false);
+    }
+  }
+
+  /**
+   * Format byte values into readable units.
+   */
+  function formatSize(bytes: number) {
+    if (bytes < 1024) {
+      return `${bytes} B`;
+    }
+
+    if (bytes < 1024 * 1024) {
+      return `${(bytes / 1024).toFixed(1)} KB`;
+    }
+
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  }
+
+  // Calculate the percentage saved after compression.
+  const savedPercent =
+    file && compressedSize > 0
+      ? Math.round(((file.size - compressedSize) / file.size) * 100)
+      : 0;
+
+  // Determine the correct extension for the generated file.
+  const outputExtension =
+    file?.type === "image/png" ? "png" : "jpg";
+
+  // Remove the original extension to build a clean download filename.
+  const baseName = file
+    ? file.name.replace(/\.[^.]+$/, "")
+    : "image";
+
+  return (
+    <Box>
+      {/* Image upload */}
+      <div className="field">
+        <label htmlFor="image-compressor-upload">
+          Select an image (JPG, PNG, or WebP)
+        </label>
+
+        <input
+          id="image-compressor-upload"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          onChange={(event) =>
+            chooseFile(event.target.files?.[0])
+          }
+        />
+      </div>
+
+      {/* Selected image details and compression settings */}
+      {file && (
+        <>
+          <p className="muted" style={{ marginTop: 12 }}>
+            Selected: {file.name} ({formatSize(file.size)})
+          </p>
+
+          <div className="field" style={{ marginTop: 18 }}>
+            <label htmlFor="image-compressor-quality">
+              Image quality: {Math.round(quality * 100)}%
+            </label>
+
+            <input
+              id="image-compressor-quality"
+              type="range"
+              min="10"
+              max="100"
+              step="5"
+              value={Math.round(quality * 100)}
+              onChange={(event) =>
+                setQuality(Number(event.target.value) / 100)
+              }
+              disabled={file.type === "image/png"}
+            />
+
+            {/* PNG ignores the Canvas quality setting. */}
+            {file.type === "image/png" && (
+              <p className="muted">
+                The quality slider is unavailable for PNG images.
+              </p>
+            )}
+          </div>
+
+          {/* Start compression */}
+          <button
+            type="button"
+            className="primary"
+            style={{ marginTop: 18 }}
+            onClick={compressImage}
+            disabled={busy}
+          >
+            {busy ? "Compressing..." : "Compress Image"}
+          </button>
+        </>
+      )}
+
+      {/* Display errors without hiding the rest of the interface. */}
+      {error && (
+        <p role="alert" style={{ color: "red", marginTop: 16 }}>
+          {error}
+        </p>
+      )}
+
+      {/* Before-and-after comparison */}
+      {file && (
+        <div
+          className="form-grid"
+          style={{ marginTop: 24 }}
+        >
+          {/* Original image preview */}
+          <div className="result">
+            <span>Original image</span>
+
+            {originalUrl && (
+              <img
+                src={originalUrl}
+                alt="Original uploaded image"
+                style={{
+                  display: "block",
+                  width: "100%",
+                  maxHeight: 300,
+                  objectFit: "contain",
+                  marginTop: 12,
+                }}
+              />
+            )}
+
+            <p className="muted" style={{ marginTop: 12 }}>
+              Original size: {formatSize(file.size)}
+            </p>
+          </div>
+
+          {/* Compressed image preview and download */}
+          {compressedUrl && (
+            <div className="result">
+              <span>Compressed image</span>
+
+              <img
+                src={compressedUrl}
+                alt="Compressed image preview"
+                style={{
+                  display: "block",
+                  width: "100%",
+                  maxHeight: 300,
+                  objectFit: "contain",
+                  marginTop: 12,
+                }}
+              />
+
+              <p style={{ marginTop: 12 }}>
+                New size: {formatSize(compressedSize)}
+              </p>
+
+              <p>
+                {savedPercent >= 0
+                  ? `${savedPercent}% smaller`
+                  : `${Math.abs(savedPercent)}% larger than the original`}
+              </p>
+
+              <a
+                href={compressedUrl}
+                download={`compressed-${baseName}.${outputExtension}`}
+                className="primary"
+                style={{
+                  display: "inline-block",
+                  marginTop: 12,
+                  textDecoration: "none",
+                }}
+              >
+                Download Compressed Image
+              </a>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Privacy and compression information */}
+      <p className="muted" style={{ marginTop: 20 }}>
+        Your image is processed locally in your browser.
+        Compression does not guarantee a smaller file for every image.
+        WebP uploads are downloaded as JPEG, so transparency may be lost.
+      </p>
+    </Box>
+  );
+}
+
+function ImageResizer() {
+  const [file, setFile] = useState<File | null>(null);
+  const [width, setWidth] = useState("800");
+  const [height, setHeight] = useState("600");
+  const [keepRatio, setKeepRatio] = useState(true);
+  const [preview, setPreview] = useState("");
+  const [error, setError] = useState("");
+
+  function handleFileChange(selected: File | undefined) {
+    setError("");
+    setPreview("");
+
+    if (!selected) {
+      setFile(null);
+      return;
+    }
+
+    if (!selected.type.startsWith("image/")) {
+      setError("Please select a valid image file.");
+      setFile(null);
+      return;
+    }
+
+    const url = URL.createObjectURL(selected);
+    setFile(selected);
+    setPreview(url);
+
+    const image = new Image();
+    image.onload = () => {
+      setWidth(String(image.naturalWidth));
+      setHeight(String(image.naturalHeight));
+    };
+    image.src = url;
+  }
+
+  function resizeImage() {
+    if (!file || !preview) return;
+
+    const targetWidth = Number(width);
+    const targetHeight = Number(height);
+
+    if (
+      !Number.isInteger(targetWidth) ||
+      !Number.isInteger(targetHeight) ||
+      targetWidth < 1 ||
+      targetHeight < 1 ||
+      targetWidth > 12000 ||
+      targetHeight > 12000
+    ) {
+      setError("Enter valid dimensions between 1 and 12000 pixels.");
+      return;
+    }
+
+    setError("");
+
+    const image = new Image();
+
+    image.onload = () => {
+      let outputWidth = targetWidth;
+      let outputHeight = targetHeight;
+
+      if (keepRatio) {
+        const scale = Math.min(
+          targetWidth / image.naturalWidth,
+          targetHeight / image.naturalHeight
+        );
+
+        outputWidth = Math.max(1, Math.round(image.naturalWidth * scale));
+        outputHeight = Math.max(1, Math.round(image.naturalHeight * scale));
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = outputWidth;
+      canvas.height = outputHeight;
+
+      const context = canvas.getContext("2d");
+
+      if (!context) {
+        setError("Unable to process this image in your browser.");
+        return;
+      }
+
+      context.drawImage(image, 0, 0, outputWidth, outputHeight);
+
+      const outputType =
+        file.type === "image/png" ? "image/png" : "image/jpeg";
+
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            setError("Image resizing failed. Please try another image.");
+            return;
+          }
+
+          const extension = outputType === "image/png" ? "png" : "jpg";
+          const link = document.createElement("a");
+          const url = URL.createObjectURL(blob);
+
+          link.href = url;
+          link.download = `resized-${file.name.replace(/\.[^.]+$/, "")}.${extension}`;
+          link.click();
+
+          URL.revokeObjectURL(url);
+        },
+        outputType,
+        0.92
+      );
+    };
+
+    image.onerror = () => setError("Unable to load this image.");
+    image.src = preview;
+  }
+
+  return (
+    <div className="image-resizer-tool">
+      <div className="field">
+        <label htmlFor="resize-image">Choose an image</label>
+        <input
+          id="resize-image"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          onChange={(event) => handleFileChange(event.target.files?.[0])}
+        />
+      </div>
+
+      {file && (
+        <>
+          <div style={{ margin: "16px 0" }}>
+            <img
+              src={preview}
+              alt="Selected image preview"
+              style={{
+                display: "block",
+                maxWidth: "100%",
+                maxHeight: 280,
+                objectFit: "contain",
+                borderRadius: 8,
+              }}
+            />
+            <p className="muted">
+              Original size: {file.name}
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+              gap: 12,
+            }}
+          >
+            <div className="field">
+              <label htmlFor="resize-width">Width (px)</label>
+              <input
+                id="resize-width"
+                type="number"
+                min="1"
+                max="12000"
+                value={width}
+                onChange={(event) => setWidth(event.target.value)}
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="resize-height">Height (px)</label>
+              <input
+                id="resize-height"
+                type="number"
+                min="1"
+                max="12000"
+                value={height}
+                onChange={(event) => setHeight(event.target.value)}
+              />
+            </div>
+          </div>
+
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              margin: "12px 0 18px",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={keepRatio}
+              onChange={(event) => setKeepRatio(event.target.checked)}
+            />
+            Keep aspect ratio (fit within dimensions)
+          </label>
+
+          <button className="primary" type="button" onClick={resizeImage}>
+            Resize & Download
+          </button>
+        </>
+      )}
+
+      {error && (
+        <p role="alert" style={{ color: "#dc2626", marginTop: 12 }}>
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
 
 function Field({ label, value, onChange }: { label: string, value: number, onChange: (v: number) => void }) { return <div className="field"><label>{label}</label><input type="number" value={value} onChange={e => onChange(Number(e.target.value))} /></div> }
 

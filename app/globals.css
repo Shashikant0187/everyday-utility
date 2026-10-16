@@ -4097,3 +4097,934 @@ select {
     margin: 0;
   }
 }
+
+/* =========================================================
+   EVERYDAY UTILITY — SHARED TOOL UI IMPROVEMENTS
+   Applies to existing calculators, PDF tools and image tools.
+========================================================= */
+
+:root {
+  --eu-primary: #2563eb;
+  --eu-primary-hover: #1d4ed8;
+  --eu-text: #0f172a;
+  --eu-muted: #64748b;
+  --eu-border: #e2e8f0;
+  --eu-surface: #ffffff;
+  --eu-background: #f8fafc;
+  --eu-radius: 16px;
+  --eu-shadow: 0 8px 28px rgba(15, 23, 42, 0.055);
+}
+
+/* Consistent sizing and readable text */
+
+.tool-page,
+.tool-box,
+.eu-pdf-tool-page,
+.eu-pdf-tool-workspace,
+.result {
+  min-width: 0;
+}
+
+.tool-box,
+.eu-pdf-tool-workspace .tool-box {
+  background: var(--eu-surface);
+  border: 1px solid var(--eu-border);
+  border-radius: 20px;
+  box-shadow: var(--eu-shadow);
+}
+
+/* Tool form fields */
+
+.field {
+  min-width: 0;
+  margin: 0 0 18px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 8px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.field input:not([type="checkbox"]):not([type="radio"]),
+.field select,
+.field textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 11px;
+  background: #fff;
+  color: var(--eu-text);
+  font: inherit;
+  font-size: 14px;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.field textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: #94a3b8;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+/* File upload controls */
+
+.field input[type="file"] {
+  width: 100%;
+  max-width: 100%;
+  min-height: 48px;
+  padding: 8px;
+  overflow: hidden;
+  border: 1px dashed #b8c7dc;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.field input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #e8efff;
+  color: #1d4ed8;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.field input[type="file"]::file-selector-button:hover {
+  background: #dbe7ff;
+}
+
+/* Checkboxes and radio buttons */
+
+.field input[type="checkbox"],
+.field input[type="radio"],
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--eu-primary);
+}
+
+.field input[type="checkbox"],
+.field input[type="radio"] {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+}
+
+/* Primary action buttons */
+
+.primary {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  max-width: 100%;
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: var(--eu-primary);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  cursor: pointer;
+  transition: background 160ms ease, box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--eu-primary-hover);
+  box-shadow: 0 5px 14px rgba(37, 99, 235, 0.2);
+  transform: translateY(-1px);
+}
+
+.primary:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.28);
+  outline-offset: 3px;
+}
+
+.primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Secondary buttons */
+
+button:not(.primary):not(.search button):not(.tool-back button) {
+  font-family: inherit;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.35);
+  outline-offset: 3px;
+}
+
+/* Result panels remain result panels, not page wrappers */
+
+.result {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid var(--eu-border);
+  border-radius: var(--eu-radius);
+  background: #f8fafc;
+  overflow-wrap: anywhere;
+}
+
+.result > span {
+  color: var(--eu-muted);
+  font-size: 13px;
+}
+
+.result strong {
+  color: var(--eu-text);
+  overflow-wrap: anywhere;
+}
+
+/* Helpful text */
+
+.muted {
+  color: var(--eu-muted);
+  line-height: 1.7;
+}
+
+.field .muted {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+/* Responsive grids */
+
+.form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.cards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Image tool previews */
+
+.eu-image-preview,
+.image-preview {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 16px auto;
+  border: 1px solid var(--eu-border);
+  border-radius: 12px;
+  background-color: #fff;
+  object-fit: contain;
+}
+
+/* Tool page content should never overflow the viewport */
+
+.tool-box img,
+.result img,
+.eu-pdf-tool-workspace img {
+  max-width: 100%;
+}
+
+.tool-box pre,
+.result pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* PDF and image directory pages */
+
+.eu-pdf-page {
+  min-height: 70vh;
+  background: var(--eu-background);
+}
+
+.eu-pdf-card {
+  display: block;
+  height: 100%;
+  border: 1px solid var(--eu-border);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.025);
+  transition: transform 180ms ease, box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.eu-pdf-card:hover {
+  transform: translateY(-3px);
+  border-color: #cbd5e1;
+  box-shadow: var(--eu-shadow);
+}
+
+.eu-pdf-card:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.35);
+  outline-offset: 3px;
+}
+
+/* Tablet and mobile */
+
+@media (max-width: 760px) {
+  .form-grid,
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tool-box,
+  .eu-pdf-tool-workspace .tool-box {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .field input[type="file"] {
+    font-size: 12px;
+  }
+
+  .primary {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .tool-box,
+  .eu-pdf-tool-workspace .tool-box {
+    padding: 16px;
+  }
+
+  .result {
+    padding: 16px;
+  }
+
+  .primary {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Image Resizer layout */
+.image-resizer-tool {
+  width: min(100%, 780px);
+  margin: 0 auto;
+  padding: 32px;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.06);
+}
+
+.image-resizer-tool h2 {
+  margin: 0 0 10px;
+  color: #0f172a;
+  font-size: clamp(24px, 3vw, 30px);
+  letter-spacing: -0.8px;
+}
+
+.image-resizer-tool > .muted {
+  margin: 0 0 26px;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.image-resizer-tool .field {
+  margin-bottom: 20px;
+}
+
+.image-resizer-tool .field input[type="file"] {
+  min-height: 56px;
+  padding: 10px;
+  background: #f8fafc;
+}
+
+.image-resizer-tool img {
+  width: auto;
+  max-width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+}
+
+.image-resizer-tool button.primary {
+  width: 100%;
+  margin-top: 4px;
+}
+
+@media (max-width: 600px) {
+  .image-resizer-tool {
+    padding: 20px;
+    border-radius: 16px;
+  }
+}
+
+
+/* =========================================================
+   EVERYDAY UTILITY — UNIFIED TOOL PAGE DESIGN SYSTEM
+   Shared by calculators, converters, PDF and image tools.
+   Existing functional styles above are intentionally retained.
+========================================================= */
+
+:root {
+  --eu-tool-ink: #101828;
+  --eu-tool-muted: #667085;
+  --eu-tool-border: #e3e8f0;
+  --eu-tool-page: #f7f9fc;
+  --eu-tool-blue: #2457d6;
+}
+
+/* Consistent page canvas and centered workspace */
+body {
+  background: var(--eu-tool-page);
+}
+
+.pdf-tool-page,
+.eu-generic-tool-page {
+  width: min(100% - 32px, 1040px);
+  margin: 0 auto;
+  padding: 24px 0 64px;
+  color: var(--eu-tool-ink);
+}
+
+/* SEO headings use the same typography as the Merge PDF page */
+.tool-seo-header {
+  width: min(760px, calc(100% - 32px));
+  margin: 0 auto 28px;
+  padding: 42px 0 0;
+  text-align: center;
+}
+
+.tool-seo-eyebrow {
+  margin: 0 0 10px;
+  color: var(--eu-tool-blue);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.tool-seo-header h1 {
+  margin: 0 0 14px;
+  color: var(--eu-tool-ink);
+  font-size: clamp(30px, 4.5vw, 44px);
+  font-weight: 780;
+  line-height: 1.12;
+  letter-spacing: -.04em;
+}
+
+.tool-seo-header > p:last-child {
+  max-width: 680px;
+  margin: 0 auto;
+  color: var(--eu-tool-muted);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+/* The shared outer workspace mirrors the established Merge PDF layout */
+.pdf-tool-workspace {
+  width: 100%;
+  margin: 0 auto 30px;
+  padding: clamp(18px, 3vw, 30px);
+  border: 1px solid var(--eu-tool-border);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 14px 42px rgba(16, 24, 40, .06);
+}
+
+/* Inner calculator/tool panel */
+.pdf-tool-workspace .tool-box {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: clamp(20px, 3vw, 30px);
+  border: 1px solid var(--eu-tool-border);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 8px 28px rgba(16, 24, 40, .045);
+}
+
+/* Shared back link and breadcrumb controls */
+.tool-back {
+  width: min(100% - 32px, 1040px);
+  margin: 8px auto 18px;
+}
+
+.tool-back button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #52627a;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pdf-tool-breadcrumb {
+  margin-bottom: 28px;
+  color: #738096;
+  font-size: 13px;
+}
+
+.pdf-tool-breadcrumb a {
+  color: #52627a;
+  text-decoration: none;
+}
+
+.pdf-tool-breadcrumb a:hover {
+  color: var(--eu-tool-blue);
+}
+
+/* Harmonized form controls, including native file inputs */
+.field {
+  min-width: 0;
+  margin-bottom: 18px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 8px;
+  color: #344054;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.field input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.field select,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 12px 13px;
+  border: 1px solid #d1d9e6;
+  border-radius: 11px;
+  outline: none;
+  background: #fff;
+  color: #101828;
+  font: inherit;
+  font-size: 14px;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.field input[type="file"] {
+  min-height: 56px;
+  padding: 8px;
+  border-style: solid;
+  background: #fff;
+  cursor: pointer;
+}
+
+.field input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #e8efff;
+  color: #2457d6;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, .11);
+}
+
+.field input[type="checkbox"],
+.field input[type="radio"],
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--eu-tool-blue);
+}
+
+.primary {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 11px;
+  background: #2457d6;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+
+.primary:hover:not(:disabled) {
+  background: #1d46b2;
+  box-shadow: 0 7px 18px rgba(37, 99, 235, .18);
+  transform: translateY(-1px);
+}
+
+.primary:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.result {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--eu-tool-border);
+  border-radius: 16px;
+  background: #f8fafc;
+  overflow-wrap: anywhere;
+}
+
+.result strong {
+  color: var(--eu-tool-ink);
+}
+
+.muted {
+  color: var(--eu-tool-muted);
+  line-height: 1.7;
+}
+
+/* Image resizer uses the surrounding shared workspace, not a unique card */
+.image-resizer-tool {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.image-resizer-tool img {
+  display: block;
+  max-width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+}
+
+/* Supporting SEO sections retain the same centered content width */
+.seo-content {
+  width: min(900px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .pdf-tool-page,
+  .eu-generic-tool-page {
+    width: min(100% - 24px, 1040px);
+    padding-top: 18px;
+    padding-bottom: 44px;
+  }
+
+  .tool-seo-header {
+    width: calc(100% - 24px);
+    padding-top: 28px;
+    text-align: left;
+  }
+
+  .tool-seo-header > p:last-child {
+    margin-left: 0;
+    font-size: 15px;
+  }
+
+  .pdf-tool-workspace {
+    padding: 14px;
+    border-radius: 17px;
+  }
+
+  .pdf-tool-workspace .tool-box {
+    padding: 17px;
+    border-radius: 15px;
+  }
+
+  .form-grid,
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .primary {
+    max-width: 100%;
+  }
+}
+
+/* Image tools directory */
+.image-tools-page {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 24px 0 72px;
+}
+
+.image-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 36px;
+}
+
+.image-tools-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #111827;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgb(15 23 42 / 3%);
+  transition: border-color 160ms ease, box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.image-tools-card:hover {
+  border-color: #bfdbfe;
+  box-shadow: 0 10px 28px rgb(15 23 42 / 7%);
+  transform: translateY(-2px);
+}
+
+.image-tools-icon {
+  display: grid;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 14px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 24px;
+}
+
+.image-tools-card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.image-tools-card-content strong {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.image-tools-card-content > span:not(.image-tools-card-link) {
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.image-tools-card-link {
+  margin-top: 3px;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.image-tools-note {
+  margin-top: 44px;
+}
+
+/* Shared presentation for the new image tool components */
+.image-tool {
+  width: 100%;
+  min-width: 0;
+}
+
+.image-tool h2 {
+  margin: 0 0 10px;
+  color: #111827;
+  font-size: 22px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.image-tool > .muted {
+  margin: 0 0 24px;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.image-tool .field {
+  margin-bottom: 18px;
+}
+
+.image-tool .field label {
+  display: block;
+  margin-bottom: 8px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.image-tool .field input:not([type="file"]):not([type="range"]) {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #111827;
+  font: inherit;
+}
+
+.image-tool .field input[type="file"] {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 14px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #f9fafb;
+}
+
+.image-tool .field input[type="range"] {
+  display: block;
+  width: 100%;
+  accent-color: #2563eb;
+}
+
+.image-tool .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.image-tool-preview {
+  display: grid;
+  min-height: 120px;
+  max-height: 420px;
+  margin: 20px 0;
+  padding: 16px;
+  place-items: center;
+  overflow: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background:
+    linear-gradient(45deg, #f3f4f6 25%, transparent 25%),
+    linear-gradient(-45deg, #f3f4f6 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #f3f4f6 75%),
+    linear-gradient(-45deg, transparent 75%, #f3f4f6 75%);
+  background-color: #ffffff;
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+}
+
+.image-tool-preview img {
+  display: block;
+  max-width: 100%;
+  max-height: 380px;
+  object-fit: contain;
+}
+
+.image-tool .primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.image-tool .primary:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.image-tool .primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.image-tool-error {
+  margin-top: 16px;
+  color: #b91c1c;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.image-tool-file-list {
+  margin: 12px 0 20px;
+  padding-left: 24px;
+  color: #374151;
+  overflow-wrap: anywhere;
+}
+
+.image-tool-file-list li {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 640px) {
+  .image-tools-page {
+    width: min(100% - 24px, 1120px);
+    padding-top: 16px;
+  }
+
+  .image-tools-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .image-tools-card {
+    padding: 18px;
+  }
+
+  .image-tool .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .image-tool .primary {
+    width: 100%;
+  }
+}

@@ -150,4 +150,56 @@ export const tools = [
       "Convert supported PDFs into editable text documents.",
     icon: "W",
   },
+    {
+    slug: "image-compressor",
+    title: "Image Compressor",
+    category: "documents",
+    description:
+      "Compress JPG, PNG and WebP images to reduce file size.",
+    icon: "▧",
+  },
+  {
+  slug: "image-resizer",
+  title: "Image Resizer",
+  category: "documents",
+  description: "Resize JPG, PNG and WebP images to custom dimensions.",
+  icon: "▧",
+},
+
+{
+  slug: "image-cropper",
+  title: "Image Cropper",
+  category: "documents",
+  description: "Crop JPG, PNG and WebP images online using custom pixel dimensions.",
+  icon: "▧",
+},
+{
+  slug: "jpg-to-png",
+  title: "JPG to PNG Converter",
+  category: "documents",
+  description: "Convert JPG images to PNG format online for free.",
+  icon: "▧",
+},
+{
+  slug: "png-to-jpg",
+  title: "PNG to JPG Converter",
+  category: "documents",
+  description: "Convert PNG images to JPG format online for free.",
+  icon: "▧",
+},
+{
+  slug: "webp-to-jpg",
+  title: "WebP to JPG Converter",
+  category: "documents",
+  description: "Convert WebP images to JPG format online for free.",
+  icon: "▧",
+},
+{
+  slug: "images-to-pdf",
+  title: "Images to PDF",
+  category: "documents",
+  description: "Combine JPG, PNG and WebP images into a single PDF file.",
+  icon: "▧",
+},
+
 ] as const;

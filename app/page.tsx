@@ -9,7 +9,7 @@ type Tool = {
   name: string;
   description: string;
   href: string;
-  category: "PDF & Documents" | "Finance" | "Everyday Calculators" | "Converters";
+  category: "PDF & Documents" | "Finance" | "Everyday Calculators" | "Converters" | "Image Tools";
   icon: string;
 };
 
@@ -19,6 +19,13 @@ const tools: Tool[] = [
   { name: "JPG to PDF", description: "Convert images to PDF", href: "/tools/jpg-to-pdf", category: "PDF & Documents", icon: "▧" },
   { name: "PDF to JPG", description: "Export PDF pages as images", href: "/tools/pdf-to-jpg", category: "PDF & Documents", icon: "▣" },
   { name: "PDF to Word", description: "Extract text from PDF files", href: "/tools/pdf-to-word", category: "PDF & Documents", icon: "W" },
+  {
+    name: "Image Compressor",
+    description: "Compress JPG, PNG and WebP images",
+    href: "/tools/image-compressor",
+    category: "Image Tools",
+    icon: "▧",
+  },
   { name: "Salary Calculator", description: "Estimate your in-hand salary", href: "/tools/salary-calculator", category: "Finance", icon: "₹" },
   { name: "EMI Calculator", description: "Calculate loan EMI and interest", href: "/tools/emi-calculator", category: "Finance", icon: "▦" },
   { name: "Income Tax Calculator", description: "Estimate income tax liability", href: "/tools/income-tax-calculator", category: "Finance", icon: "%" },
@@ -31,6 +38,7 @@ const tools: Tool[] = [
   { name: "BMI Calculator", description: "Calculate body mass index", href: "/tools/bmi-calculator", category: "Everyday Calculators", icon: "＋" },
   { name: "Unit Converter", description: "Convert common units quickly", href: "/tools/unit-converter", category: "Converters", icon: "⇄" },
   { name: "Fuel Cost Calculator", description: "Estimate the cost of a trip", href: "/tools/fuel-cost-calculator", category: "Everyday Calculators", icon: "⌁" },
+
 ];
 
 const categories = [
@@ -38,6 +46,14 @@ const categories = [
   { name: "Finance Calculators", key: "Finance", description: "EMI, salary, income tax, SIP, GST and more.", icon: "▥", tone: "green", href: "/tools/emi-calculator" },
   { name: "Everyday Calculators", key: "Everyday Calculators", description: "Percentage, age, date, BMI, discount and more.", icon: "▦", tone: "blue", href: "/tools/percentage-calculator" },
   { name: "Unit Converters", key: "Converters", description: "Convert length, weight, temperature and more.", icon: "⇄", tone: "purple", href: "/tools/unit-converter" },
+  {
+    name: "Image Tools",
+    key: "Image Tools",
+    description: "Compress, resize, crop and convert images online.",
+    icon: "▧",
+    tone: "purple",
+    href: "/image-tools",
+  },
 ] as const;
 
 function SearchIcon() {

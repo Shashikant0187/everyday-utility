@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+
 const navMenus = [
   {
     label: "PDF Tools",
@@ -10,6 +11,19 @@ const navMenus = [
       { label: "JPG to PDF", href: "/tools/jpg-to-pdf" },
       { label: "PDF to JPG", href: "/tools/pdf-to-jpg" },
       { label: "PDF to Word", href: "/tools/pdf-to-word" },
+    ],
+  },
+  {
+    label: "Image Tools",
+    items: [
+      { label: "All Image Tools", href: "/image-tools" },
+      { label: "Image Compressor", href: "/tools/image-compressor" },
+      { label: "Image Resizer", href: "/tools/image-resizer" },
+      { label: "Image Cropper", href: "/tools/image-cropper" },
+      { label: "JPG to PNG", href: "/tools/jpg-to-png" },
+      { label: "PNG to JPG", href: "/tools/png-to-jpg" },
+      { label: "WebP to JPG", href: "/tools/webp-to-jpg" },
+      { label: "Images to PDF", href: "/tools/images-to-pdf" },
     ],
   },
   {
@@ -35,6 +49,7 @@ const navMenus = [
     ],
   },
 ];
+
 
 export default function Header() {
   return (

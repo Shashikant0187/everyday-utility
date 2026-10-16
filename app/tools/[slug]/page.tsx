@@ -27,6 +27,7 @@ import CompressPdfFAQ from "../../../components/tools/compress-pdf/page";
 import JpgToPdfFAQ from "../../../components/tools/jpg-to-pdf/page";
 import PdfToJpgFAQ from "../../../components/tools/pdf-to-jpg/page";
 import PdfToWordFAQ from "../../../components/tools/pdf-to-word/page";
+import FuelCostSeoContent from "../../../components/FuelCostSeoContent";
 
 
 type Props = {
@@ -135,6 +136,16 @@ const seoData: Record<
     title: "Salary Calculator - Calculate In-Hand Salary from CTC",
     description:
       "Estimate monthly in-hand salary from CTC, employer PF, gratuity, variable pay, employee PF, professional tax and income tax.",
+  },
+
+  "image-compressor": {
+    title: "Image Compressor - Compress JPG, PNG and WebP Online",
+    description: "Compress JPG, PNG and WebP images in your browser and download the optimized image. Files are processed locally on your device.",
+  },
+
+  "image-resizer": {
+    title: "Image Resizer - Resize JPG, PNG and WebP Online",
+    description: "Resize JPG, PNG and WebP images to custom pixel dimensions while preserving the aspect ratio when desired.",
   },
 };
 
@@ -413,6 +424,25 @@ export default async function ToolPage({ params }: Props) {
           <ToolClient slug={slug} />
           <SalarySeoContent />
           <RelatedTools currentSlug={slug} />
+        </>
+      ) : slug === "fuel-cost-calculator" ? (
+        <>
+          <header className="tool-seo-header">
+            <p className="tool-seo-eyebrow">FREE ONLINE CALCULATOR</p>
+            <h1>{seoData[slug].title}</h1>
+            <p>{seoData[slug].description}</p>
+          </header>
+          <ToolClient slug={slug} />
+          <FuelCostSeoContent />
+        </>
+      ) : slug === "image-compressor" || slug === "image-resizer" ? (
+        <>
+          <header className="tool-seo-header">
+            <p className="tool-seo-eyebrow">FREE ONLINE IMAGE TOOL</p>
+            <h1>{seoData[slug].title}</h1>
+            <p>{seoData[slug].description}</p>
+          </header>
+          <ToolClient slug={slug} />
         </>
       ) : slug === "pdf-to-word" ? (
         <>
